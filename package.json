@@ -1,19 +1,16 @@
 {
-  "name": "rizzcord",
-  "version": "1.0.0",
-  "private": true,
-  "scripts": {
-    "install": "pnpm install --no-frozen-lockfile",
-    "build": "pnpm install --no-frozen-lockfile --prefix backend && pnpm install --no-frozen-lockfile --prefix frontend",
-    "start": "pnpm run start --prefix backend",
-    "vercel-build": "pnpm install --no-frozen-lockfile && pnpm run build"
-  },
-  "devDependencies": {
-    "@vitejs/plugin-react": "^4.2.0",
-    "vite": "^6.3.0",
-    "daisyui": "^5.0.35",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-icons": "^5.5.0"
+	"dependencies": {
+	  "react": "^18.2.0",
+	  "react-dom": "^18.2.0",
+	  "react-icons": "^5.5.0"
+	},
+	"scripts": {
+		"build": "pnpm install --prefix backend && pnpm install --prefix frontend",
+		"start": "pnpm run start --prefix backend"
+	},
+	"devDependencies": {
+	  "@vitejs/plugin-react": "^4.2.0",
+	  "vite": "^6.3.0",
+	  "daisyui": "^5.0.35"
+	}
   }
-}
