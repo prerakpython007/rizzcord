@@ -5,9 +5,10 @@ import messageRoutes from './routes/message.route.js';
 import cors from 'cors';
 import { connectDB } from './lib/db.js';
 import cookieParser from 'cookie-parser';
+import { app, server } from './lib/socket.js';
 
 dotenv.config();
-const app = express();
+
 const PORT = process.env.PORT;
 
 // CORS configuration - must be before any routes
@@ -33,7 +34,7 @@ app.use((err, req, res, next) => {
     res.status(500).json({ message: 'Something went wrong!' });
 });
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     console.log("Server is running on PORT:", PORT);
     connectDB();
 });
