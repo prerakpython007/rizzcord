@@ -1,6 +1,7 @@
 import Message from "../models/message.model.js";
 import User from "../models/user.model.js";
 import cloudinary from "../lib/cloudinary.js";
+import { getReceiverSocketId, io } from "../lib/socket.js";
 
 export const getUsersForSidebar = async (req , res) =>{
 
@@ -23,8 +24,8 @@ export const getMessages = async (req,res) => {
 
         const messages = await Message.find({
             $or:[
-                {senderId: myId, reciverId: userToChatId},
-                {senderId: userToChatId, reciverId: myId}
+                {senderId: myId, receiverId: userToChatId},
+                {senderId: userToChatId, receiverId: myId}
 
             ]
         })
@@ -40,26 +41,34 @@ export const getMessages = async (req,res) => {
 export const sendMessage = async (req, res) => {
     try{
         const {text, image} = req.body;
-        const {id: reciverId} = req.params;
+        const {id: receiverId} = req.params;
         const senderId = req.user._id;
 
         let imageUrl;
         if (image) {
-            // upload base64 image to cloudinary and get the url
             const uploadResponse = await cloudinary.uploader.upload(image);
             imageUrl = uploadResponse.secure_url;
         }
 
         const newMessage = new Message({
             senderId,
-            reciverId,
+            receiverId,
             text,
             image: imageUrl,
         });
 
         await newMessage.save();
 
-        // todo: real time functionality  goes here =>  socket.io
+        const receiverSocketId = getReceiverSocketId(receiverId);
+        if(receiverSocketId) {
+            io.to(receiverSocketId).emit("newMessage", newMessage);
+        }
+
+        // Emit to sender as well to ensure both sides update
+        const senderSocketId = getReceiverSocketId(senderId);
+        if(senderSocketId) {
+            io.to(senderSocketId).emit("newMessage", newMessage);
+        }
 
         res.status(200).json(newMessage);
     }catch (error) {
