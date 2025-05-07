@@ -4,7 +4,7 @@
 	"private": true,
 	"scripts": {
 	  "install": "pnpm install --no-frozen-lockfile",
-	  "build": "cd frontend && pnpm install --no-frozen-lockfile && pnpm run build && cd ../backend && pnpm install --no-frozen-lockfile",
+	  "build": "pnpm install --prefix backend && pnpm install --prefix frontend && pnpm run build --prefix frontend",
 	  "start": "pnpm run start --prefix backend",
 	  "vercel-build": "pnpm run build"
 	},
